@@ -7,7 +7,7 @@
 - - Googleapis: To interact with the Google Sheets API.
 - - dotenv: To manage environment variables.
 - - Mongoose (Optional): For user management with MongoDB.
-- - Nodemon (Dev Dependency): For auto-restarting your server during development.
+
 
 
 

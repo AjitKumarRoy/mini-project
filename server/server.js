@@ -23,8 +23,8 @@ app.use(cookieParser());
 app.get('/', (req, res) => {
     res.send('hello world!');
 });
-app.use('/auth', authRoutes);
-app.use('/sheets', sheetRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/sheets', sheetRoutes);
 
 // Basic error handler
 app.use((err, req, res, next) => {

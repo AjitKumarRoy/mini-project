@@ -11,6 +11,8 @@ router.post('/:sheetId/createSheet', authMiddleware, sheetsController.createShee
 router.post('/:sheetId/renameSheet', authMiddleware, sheetsController.renameSheet);
 router.get('/:sheetId', authMiddleware, sheetsController.getSheet);
 router.post('/:sheetId/update', authMiddleware, sheetsController.updateSheet);
+router.post('/:sheetId/writeBoldText', authMiddleware, sheetsController.writeBoldText);
+router.post('/:sheetId/makeTextBold', authMiddleware, sheetsController.makeTextBold);
 router.delete('/:sheetId/deleteSpreadSheet', authMiddleware, sheetsController.deleteSpreadSheet);
 router.delete('/:sheetId/deleteSheet', authMiddleware, sheetsController.deleteSheet);
 router.post('/:sheetId/append', authMiddleware, sheetsController.appendData);

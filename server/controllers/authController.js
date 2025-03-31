@@ -52,7 +52,7 @@ exports.googleCallback = async (req, res, next) => {
         };
         const jwtToken = generateToken(payload);
         res.cookie('token', jwtToken, {httpOnly: true});
-        res.redirect('/auth/profile');  // or send a JSON response if usring SPA        
+        res.redirect('/api/auth/profile');  // or send a JSON response if usring SPA        
     } catch(error) {
         next(error);
     }

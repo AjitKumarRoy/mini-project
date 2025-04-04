@@ -9,7 +9,7 @@ router.post('/createSpreadSheet', authMiddleware, sheetsController.createSpreadS
 router.post('/:sheetId/renameSpreadSheet', authMiddleware, sheetsController.renameSpreadSheet);
 router.post('/:sheetId/createSheet', authMiddleware, sheetsController.createSheet);
 router.post('/:sheetId/renameSheet', authMiddleware, sheetsController.renameSheet);
-router.get('/:sheetId', authMiddleware, sheetsController.getSheet);
+router.post('/:sheetId', authMiddleware, sheetsController.getSheet);
 router.post('/:sheetId/update', authMiddleware, sheetsController.updateSheet);
 router.post('/:sheetId/writeBoldText', authMiddleware, sheetsController.writeBoldText);
 router.post('/:sheetId/makeTextBold', authMiddleware, sheetsController.makeTextBold);

@@ -517,10 +517,13 @@ const appendData = async (req, res, next) => {
                             },
                             cell: {
                                 userEnteredFormat: {
-                                    horizontalAlignment: 'CENTER'
+                                    horizontalAlignment: 'CENTER',
+                                    textFormat: {
+                                        bold: false // Explicitly set bold to false
+                                    }
                                 }
                             },
-                            fields: 'userEnteredFormat.horizontalAlignment'
+                            fields: 'userEnteredFormat.horizontalAlignment, userEnteredFormat.textFormat.bold'
                         }
                     }
                 ]
@@ -697,23 +700,34 @@ const listSheetsWithMetadata = async (req, res, next) => {
 
 // List all spreadsheets
 const listAllSpreadsheets = async (req, res, next) => {
-    console.log('Route hit helllo');
+    console.log('Route hit hello');
     try {
-        
         await setUserCredentials(req.user.id);
-
+        
         const response = await drive.files.list({
             q: "mimeType='application/vnd.google-apps.spreadsheet'",
-            fields: "files(id, name, createdTime, modifiedTime, owners)"
+            fields: "files(id, name, createdTime, modifiedTime, owners), nextPageToken",
         });
 
-        res.status(200).json({ success: true, spreadsheets: response.data.files });
+        let spreadsheets = response.data.files;
+        let pageToken = response.data.nextPageToken;
+
+        while (pageToken) {
+            const nextPageResponse = await drive.files.list({
+                q: "mimeType='application/vnd.google-apps.spreadsheet'",
+                fields: "files(id, name, createdTime, modifiedTime, owners), nextPageToken",
+                pageToken: pageToken,
+            });
+            spreadsheets = spreadsheets.concat(nextPageResponse.data.files);
+            pageToken = nextPageResponse.data.nextPageToken;
+        }
+
+        res.status(200).json({ success: true, spreadsheets: spreadsheets });
     } catch (error) {
         console.error('Google API Error:', error);
-        next(error);
+        res.status(500).json({ success: false, error: "Failed to retrieve spreadsheets.", details: error.toString() });
     }
 };
-
 
 // Get overall spreadsheets metadata
 const getSpreadsheetMetadata = async (req, res, next) => {

@@ -51,8 +51,13 @@ exports.googleCallback = async (req, res, next) => {
             email: user.email
         };
         const jwtToken = generateToken(payload);
-        res.cookie('token', jwtToken, {httpOnly: true});
-        res.redirect('/api/auth/profile');  // or send a JSON response if usring SPA        
+        res.cookie('token', jwtToken, {
+            httpOnly: true,
+            sameSite: 'Lax', // Allow frontend and backend on different ports
+        });
+        //res.redirect('/api/auth/profile');  // or send a JSON response if usring SPA     
+        //res.redirect(`http://localhost:3001/profile?token=${jwtToken}`);
+        res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/`)
     } catch(error) {
         next(error);
     }
@@ -93,7 +98,16 @@ exports.getProfile = async (req, res, next) => {
         // Asumming the req.user contains the decoded JWT payload
         const user = await User.findById(req.user.id).select('-__v');
         // res.json({user});
-        res.send(`Welcome ${user.name}`);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // ✅ Return user details as JSON (including profile picture)
+        res.json({
+            name: user.name,
+            email: user.email,
+            profilePicture: user.picture, // Assuming user has a `profilePicture` field
+        });
     } catch(error) {
         next(error);
     }
